@@ -66,10 +66,16 @@ class User implements UserInterface
      */
     private $time;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Story", mappedBy="user", orphanRemoval=true)
+     */
+    private $stories;
+
     public function __construct($username)
     {
         $this->isActive = true;
         $this->username = $username;
+        $this->stories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +223,37 @@ class User implements UserInterface
     public function setTime(string $time): self
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Story[]
+     */
+    public function getStories(): Collection
+    {
+        return $this->stories;
+    }
+
+    public function addStory(Story $story): self
+    {
+        if (!$this->stories->contains($story)) {
+            $this->stories[] = $story;
+            $story->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStory(Story $story): self
+    {
+        if ($this->stories->contains($story)) {
+            $this->stories->removeElement($story);
+            // set the owning side to null (unless already changed)
+            if ($story->getUser() === $this) {
+                $story->setUser(null);
+            }
+        }
 
         return $this;
     }
