@@ -62,8 +62,13 @@ info() {
 }
 
 exec() {
-    echo -e "\n\033[35m==========  Infos  ==========\n\033[37m"
     docker exec -it $CONTAINER_ID bash
+}
+
+permissions() {
+    echo -e "\n\033[35m==========  Set Permissions  ==========\n\033[37m"
+    sudo chmod 777 -fR var/cache || true
+    sudo chmod 777 -R docker/mysql/
 }
 
 #############

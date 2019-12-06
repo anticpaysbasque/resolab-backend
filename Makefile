@@ -10,7 +10,7 @@ help:
 ## Docker
 ##---------------------------------------------------------------------------
 
-init: build up install assets## Init project
+init: build permissions up install assets permissions ## Init project
 
 build: ## Build all containers
 	$(EXEC) build
@@ -27,6 +27,10 @@ info: ## Display container ID
 
 exec: ## Go to the PHP container
 	$(EXEC) exec
+
+permissions: ## Set permissions
+	$(EXEC) permissions
+
 
 ##---------------------------------------------------------------------------
 ## Symfony commands
