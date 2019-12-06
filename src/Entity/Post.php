@@ -6,7 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
+ * @ApiResource()
+ * @ORM\Entity()
  */
 class Post
 {
@@ -42,6 +43,11 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="Post")
+     */
+    private $comment;
 
     public function __construct()
     {
@@ -97,6 +103,18 @@ class Post
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?Comment $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

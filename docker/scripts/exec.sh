@@ -97,6 +97,10 @@ cache_clear() {
     cmd "$CONSOLE ca:cl"
 }
 
+fixtures() {
+    cmd "$CONSOLE bin/console doctrine:fixtures:load"
+}
+
 database() {
     cmd "$CONSOLE doctrine:database:create"
 }
