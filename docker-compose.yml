@@ -1,0 +1,65 @@
+version: "3.3"
+
+services:
+  nginx:
+    build: docker/nginx
+    container_name: resolab_nginx
+    working_dir: /project
+    ports:
+      - target: 443
+        published: 8087
+        protocol: tcp
+        mode: host
+      - target: 80
+        published: 8089
+        protocol: tcp
+        mode: host
+    depends_on:
+      - php
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./docker/nginx/log:/var/log/nginx
+      - ./:/project
+      - ./docker/nginx/certificats/secrets:/run/secrets
+    networks:
+      - web_resolab
+
+  php:
+    build: docker/php
+    container_name: resolab_php
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/project
+      - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - web_resolab
+
+  mysql:
+    image: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: resolab
+      MYSQL_USER: root
+      MYSQL_PASSWORD: "a96YT/*jcRj:*)!H"
+      MYSQL_ROOT_PASSWORD: "a96YT/*jcRj:*)!H"
+    networks:
+      - web_resolab
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      ports :
+        - "8082:80"
+      depends_on:
+        - mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: "a96YT/*jcRj:*)!H"
+        PMA_HOST: mysql
+      networks:
+        - web_resolab
+
+networks:
+  web_resolab:

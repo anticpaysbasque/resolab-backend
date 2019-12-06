@@ -32,3 +32,8 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+### Docker ###
+docker/mysql
+docker/nginx/log
+### Docker ###
