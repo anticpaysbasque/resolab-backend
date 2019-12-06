@@ -42,7 +42,7 @@ services:
     volumes:
       - ./docker/mysql:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: resolab
+      MYSQL_DATABASE: antic
       MYSQL_USER: root
       MYSQL_PASSWORD: "a96YT/*jcRj:*)!H"
       MYSQL_ROOT_PASSWORD: "a96YT/*jcRj:*)!H"
