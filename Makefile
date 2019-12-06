@@ -10,7 +10,7 @@ help:
 ## Docker
 ##---------------------------------------------------------------------------
 
-init: build create-mysql up install migrate assets permissions ## Init project
+init: build create-mysql up install database migrate assets permissions ## Init project
 
 build: ## Build all containers
 	$(EXEC) build

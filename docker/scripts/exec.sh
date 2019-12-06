@@ -98,7 +98,7 @@ cache_clear() {
 }
 
 database() {
-    cmd "$CONSOLE doctrine:mongodb:schema:create"
+    cmd "$CONSOLE doctrine:database:create"
 }
 
 migration() {
