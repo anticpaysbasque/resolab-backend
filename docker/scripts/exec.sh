@@ -39,7 +39,8 @@ build() {
 
 deploy() {
     echo -e "\n\033[35m==========  Deploying Stack  ==========\n\033[37m"
-
+    
+    mkdir -p "docker/mysql"
     docker-compose up -d
 
     echo -e "\n\033[32m ✔ Success! Your stack is ready 🎉 \n\033[37m"
@@ -65,6 +66,11 @@ exec() {
     docker exec -it $CONTAINER_ID bash
 }
 
+create-mysql() {
+    mkdir -p docker/mysql
+    sudo chmod 777 -R docker/mysql/
+}
+
 permissions() {
     echo -e "\n\033[35m==========  Set Permissions  ==========\n\033[37m"
     sudo chmod 777 -fR var/cache || true
@@ -76,7 +82,6 @@ permissions() {
 #############
 
 install() {
-    cp config/packages/parameters.yaml.docker config/packages/parameters.yaml
     cmd 'composer install'
 }
 
@@ -93,7 +98,15 @@ cache_clear() {
 }
 
 database() {
-  cmd "$CONSOLE doctrine:mongodb:schema:create"
+    cmd "$CONSOLE doctrine:mongodb:schema:create"
+}
+
+migration() {
+    cmd "$CONSOLE make:migration"
+}
+
+migrate() {
+    cmd "$CONSOLE doctrine:migrations:migrate"
 }
 
 #############
