@@ -37,7 +37,3 @@ yarn-error.log
 docker/mysql
 docker/nginx/log
 ### Docker ###
-
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###

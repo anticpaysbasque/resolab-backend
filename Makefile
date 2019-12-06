@@ -10,7 +10,7 @@ help:
 ## Docker
 ##---------------------------------------------------------------------------
 
-init: build permissions up install assets permissions ## Init project
+init: build create-mysql up install migrate assets permissions ## Init project
 
 build: ## Build all containers
 	$(EXEC) build
@@ -27,6 +27,9 @@ info: ## Display container ID
 
 exec: ## Go to the PHP container
 	$(EXEC) exec
+
+create-mysql: ## Create mysql folder
+	$(EXEC) create-mysql
 
 permissions: ## Set permissions
 	$(EXEC) permissions
@@ -68,6 +71,12 @@ tf-coverage: ## Run the units tests coverage
 
 database: ## Create the database
 	$(EXEC) database
+
+migration: ## Create new migration
+	$(EXEC) migration
+
+migrate: ## Run migration(s)
+	$(EXEC) migrate
 
 ##---------------------------------------------------------------------------
 ## Audit
