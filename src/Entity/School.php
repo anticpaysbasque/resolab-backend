@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource()
  * @ORM\Entity()
  */
-class Story
+class School
 {
     /**
      * @ORM\Id()
@@ -19,23 +19,23 @@ class Story
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string", length=255)
      */
-    private $date;
+    private $name;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getName(): ?string
     {
-        return $this->date;
+        return $this->name;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setName(string $name): self
     {
-        $this->date = $date;
+        $this->name = $name;
 
         return $this;
     }

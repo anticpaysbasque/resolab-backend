@@ -2,17 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
 {
+    const GENDERS = ['male', 'female'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -42,17 +48,18 @@ class User implements UserInterface
     private $isActive;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=6)
+     * @Assert\Choice(choices=USER::GENDERS, message="Choose a valid gender.")
      */
     private $gender;
 
@@ -66,10 +73,22 @@ class User implements UserInterface
      */
     private $time;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
+     */
+    private $posts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Time", mappedBy="user")
+     */
+    private $times;
+
     public function __construct($username)
     {
         $this->isActive = true;
         $this->username = $username;
+        $this->posts = new ArrayCollection();
+        $this->times = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +236,68 @@ class User implements UserInterface
     public function setTime(string $time): self
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    /**
+     * @return PersistentCollection|Post[]
+     */
+    public function getPosts(): PersistentCollection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->contains($post)) {
+            $this->posts->removeElement($post);
+            // set the owning side to null (unless already changed)
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Time[]
+     */
+    public function getTimes(): Collection
+    {
+        return $this->times;
+    }
+
+    public function addTime(Time $time): self
+    {
+        if (!$this->times->contains($time)) {
+            $this->times[] = $time;
+            $time->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTime(Time $time): self
+    {
+        if ($this->times->contains($time)) {
+            $this->times->removeElement($time);
+            // set the owning side to null (unless already changed)
+            if ($time->getUser() === $this) {
+                $time->setUser(null);
+            }
+        }
 
         return $this;
     }
