@@ -72,6 +72,9 @@ tf-coverage: ## Run the units tests coverage
 database: ## Create the database
 	$(EXEC) database
 
+reset-database: ## Reload database + run mmigration + load fixtures
+	$(EXEC) reset_database
+
 migration: ## Create new migration
 	$(EXEC) migration
 
