@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ApiResource()
@@ -24,14 +26,9 @@ class Post
     private $description;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $photo;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $likes;
 
     /**
      * @ORM\Column(type="boolean")
@@ -45,13 +42,14 @@ class Post
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="Post")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", orphanRemoval=true)
      */
-    private $comment;
+    private $comments;
 
     public function __construct()
     {
         $this->display = true;
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,21 +74,9 @@ class Post
         return $this->photo;
     }
 
-    public function setPhoto(string $photo): self
+    public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
-
-        return $this;
-    }
-
-    public function getLikes(): ?bool
-    {
-        return $this->likes;
-    }
-
-    public function setLikes(?bool $likes): self
-    {
-        $this->likes = $likes;
 
         return $this;
     }
@@ -107,14 +93,41 @@ class Post
         return $this;
     }
 
-    public function getComment(): ?Comment
+    /**
+     * @return PersistentCollection|null
+     */
+    public function getComments(): ?PersistentCollection
     {
-        return $this->comment;
+        return $this->comments;
     }
 
-    public function setComment(?Comment $comment): self
+    /**
+     * @param Comment $comment
+     * @return Post
+     */
+    public function addComment(Comment $comment): self
     {
-        $this->comment = $comment;
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Comment $comment
+     * @return Post
+     */
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getPost() === $this) {
+                $comment->setPost(null);
+            }
+        }
 
         return $this;
     }

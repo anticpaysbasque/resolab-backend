@@ -105,12 +105,20 @@ database() {
     cmd "$CONSOLE doctrine:database:create"
 }
 
+reset_database() {
+    cmd "$CONSOLE d:d:d --force && $CONSOLE d:d:c && $CONSOLE d:m:m && $CONSOLE doctrine:fixtures:load"
+}
+
 migration() {
     cmd "$CONSOLE make:migration"
 }
 
 migrate() {
     cmd "$CONSOLE doctrine:migrations:migrate"
+}
+
+token() {
+    curl -X POST -H "Content-Type: application/json" http://localhost:8089/api/login_check -d '{"username":"student","password":"antic"}'
 }
 
 #############
