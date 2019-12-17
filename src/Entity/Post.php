@@ -6,9 +6,13 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}}
+ * )
  * @ORM\Entity()
  */
 class Post
@@ -22,34 +26,46 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read", "write"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"read", "write"})
      */
     private $photo;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"read", "write"})
      */
     private $display;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read", "write"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", orphanRemoval=true)
+     * @Groups({"read", "write"})
      */
     private $comments;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"read"})
+     */
+    private $createdAt;
 
     public function __construct()
     {
         $this->display = true;
         $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int

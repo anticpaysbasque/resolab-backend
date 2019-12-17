@@ -86,7 +86,9 @@ install() {
 }
 
 update() {
-    cmd 'composer update --no-progress --dev --ansi -nv --prefer-dist --optimize-autoloader'
+    git pull origin dev
+    install
+    reset_database
 }
 
 console() {
@@ -98,7 +100,7 @@ cache_clear() {
 }
 
 fixtures() {
-    cmd "$CONSOLE bin/console doctrine:fixtures:load"
+    cmd "$CONSOLE doctrine:fixtures:load"
 }
 
 database() {
@@ -118,7 +120,7 @@ migrate() {
 }
 
 token() {
-    curl -X POST -H "Content-Type: application/json" http://localhost:8089/api/login_check -d '{"username":"student","password":"antic"}'
+    curl -X POST -H "Content-Type: application/json" http://localhost:8089/api/login_check -d '{"username":"student_0","password":"antic"}'
 }
 
 #############

@@ -42,7 +42,7 @@ permissions: ## Set permissions
 install: ## Install dependencies
 	$(EXEC) install
 
-update: ## Update dependencies
+update: ## Update project
 	$(EXEC) update
 
 clear: ## Clear the cache

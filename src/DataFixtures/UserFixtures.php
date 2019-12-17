@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Faker;
 
 class UserFixtures extends Fixture
 {
@@ -22,7 +23,9 @@ class UserFixtures extends Fixture
         $manager->persist($this->getSuperAdmin());
         $manager->persist($this->getAdmin());
         $manager->persist($this->getModerator());
-        $manager->persist($this->getStudent());
+        foreach ($this->getStudents() as $student) {
+            $manager->persist($student);
+        }
 
         $manager->flush();
     }
@@ -69,17 +72,24 @@ class UserFixtures extends Fixture
         return $user;
     }
 
-    private function getStudent()
+    private function getStudents()
     {
-        $user = new User('student');
-        $user
-            ->setFirstname('john')
-            ->setLastname('doe')
-            ->setRoles(['ROLE_STUDENT'])
-            ->setGender('male')
-        ;
-        $user->setPassword($this->encoder->encodePassword($user, 'antic'));
+        $users = [];
+        $faker = Faker\Factory::create();
+        for($i = 0; $i < 10; $i++) {
+            $user = new User("student_$i");
+            $user
+                ->setFirstname($faker->name)
+                ->setLastname($faker->name)
+                ->setRoles(['ROLE_STUDENT'])
+                ->setGender($faker->randomElement(['male', 'female']))
+            ;
+            $user->setPassword($this->encoder->encodePassword($user, 'antic'));
+            $this->addReference("student_$i", $user);
+            $users[] = $user;
+        }
 
-        return $user;
+
+        return $users;
     }
 }
