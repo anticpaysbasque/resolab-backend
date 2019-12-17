@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Post;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -9,42 +10,37 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Faker;
 
-class PostFixtures extends Fixture implements DependentFixtureInterface
+class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
-    private $encoder;
-
-    public function __construct(UserPasswordEncoderInterface $encoder)
-    {
-        $this->encoder = $encoder;
-    }
-
     public function load(ObjectManager $manager)
     {
-        foreach ($this->getPosts() as $post) {
+        foreach ($this->getComments() as $post) {
             $manager->persist($post);
         }
 
         $manager->flush();
     }
 
-    private function getPosts()
+    private function getComments()
     {
-        $posts = [];
+        $comments = [];
+        $posts = $this->getPosts();
         $users = $this->getUsers();
 
         $faker = Faker\Factory::create();
-        for($i = 0; $i < 50; $i++) {
-            $post = new Post();
-            $post
-                ->setDescription($faker->sentence)
-                ->setPhoto($faker->imageUrl())
+        for($i = 0; $i < 100; $i++) {
+            $comment = new Comment();
+            $comment
+                ->setContent($faker->sentence)
+                ->setPost($this->getReference($faker->randomElement($posts)))
                 ->setUser($this->getReference($faker->randomElement($users)))
+                ->setCreatedAt($faker->dateTimeBetween())
             ;
-            $this->addReference("post_$i", $post);
-            $posts[] = $post;
+
+            $comments[] = $comment;
         }
 
-        return $posts;
+        return $comments;
     }
 
     private function getUsers()
@@ -57,10 +53,21 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         return $users;
     }
 
+    private function getPosts()
+    {
+        $posts = [];
+        for($i = 0; $i < 50; $i++) {
+            $posts[] = "post_$i";
+        }
+
+        return $posts;
+    }
+
     public function getDependencies()
     {
         return array(
             UserFixtures::class,
+            PostFixtures::class,
         );
     }
 }
