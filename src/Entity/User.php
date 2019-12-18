@@ -73,11 +73,6 @@ class User implements UserInterface
     private $birthday;
 
     /**
-     * @ORM\Column(type="decimal", precision=2, scale=2, nullable=true)
-     */
-    private $time;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
      */
     private $posts;
@@ -92,6 +87,11 @@ class User implements UserInterface
      */
     private $times;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Likes", mappedBy="user", orphanRemoval=true)
+     */
+    private $likes;
+
     public function __construct($username)
     {
         $this->isActive = true;
@@ -99,6 +99,7 @@ class User implements UserInterface
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->times = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -238,18 +239,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTime(): ?string
-    {
-        return $this->time;
-    }
-
-    public function setTime(string $time): self
-    {
-        $this->time = $time;
-
-        return $this;
-    }
-
     /**
      * @return PersistentCollection|Post[]
      */
@@ -320,26 +309,11 @@ class User implements UserInterface
         return $this->times;
     }
 
-    public function addTime(Time $time): self
+    /**
+     * @return PersistentCollection
+     */
+    public function getLikes(): PersistentCollection
     {
-        if (!$this->times->contains($time)) {
-            $this->times[] = $time;
-            $time->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTime(Time $time): self
-    {
-        if ($this->times->contains($time)) {
-            $this->times->removeElement($time);
-            // set the owning side to null (unless already changed)
-            if ($time->getUser() === $this) {
-                $time->setUser(null);
-            }
-        }
-
-        return $this;
+        return $this->likes;
     }
 }

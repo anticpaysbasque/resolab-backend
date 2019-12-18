@@ -7,7 +7,6 @@ use App\Entity\Post;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Faker;
 
 class CommentFixtures extends Fixture implements DependentFixtureInterface
@@ -36,6 +35,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
                 ->setUser($this->getReference($faker->randomElement($users)))
                 ->setCreatedAt($faker->dateTimeBetween())
             ;
+            $this->addReference("comment_$i", $comment);
 
             $comments[] = $comment;
         }

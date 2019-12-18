@@ -56,6 +56,11 @@ class Post
     private $comments;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Likes", mappedBy="user", orphanRemoval=true)
+     */
+    private $likes;
+
+    /**
      * @ORM\Column(type="datetime")
      * @Groups({"read"})
      */
@@ -66,6 +71,7 @@ class Post
         $this->display = true;
         $this->comments = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,5 +152,13 @@ class Post
         }
 
         return $this;
+    }
+
+    /**
+     * @return PersistentCollection
+     */
+    public function getLikes(): PersistentCollection
+    {
+        return $this->likes;
     }
 }
