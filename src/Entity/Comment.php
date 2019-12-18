@@ -6,11 +6,9 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ApiResource()
@@ -51,9 +49,15 @@ class Comment
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Likes", mappedBy="user", orphanRemoval=true)
+     */
+    private $likes;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,18 +109,21 @@ class Comment
     }
 
     /**
-     * @param mixed $createdAt
+     * @return PersistentCollection
      */
-    public function setCreatedAt($createdAt): void
+    public function getLikes(): PersistentCollection
     {
-        $this->createdAt = $createdAt;
+        return $this->likes;
     }
 
     /**
-     * @return mixed
+     * @param $createdAt
+     * @return Comment
      */
-    public function getCreatedAt()
+    public function setCreatedAt($createdAt): self
     {
-        return $this->createdAt;
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }
