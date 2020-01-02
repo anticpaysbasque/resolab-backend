@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use \DateTime;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     attributes={"order"={"createdAt": "DESC"}},
- *     normalizationContext={"groups"={"read"}},
+ *     normalizationContext={"groups"={"read", "media_object_read"}},
  *     denormalizationContext={"groups"={"write"}}
  * )
  * @ORM\Entity()
@@ -71,11 +73,21 @@ class Post
      */
     private $createdAt;
 
+    /**
+     * @var MediaObject|null
+     *
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ApiProperty(iri="http://schema.org/image")
+     * @Groups({"read", "write"})
+     */
+    public $image;
+
     public function __construct()
     {
         $this->display = true;
         $this->comments = new ArrayCollection();
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
         $this->likes = new ArrayCollection();
     }
 
@@ -173,5 +185,13 @@ class Post
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return MediaObject|null
+     */
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
     }
 }
