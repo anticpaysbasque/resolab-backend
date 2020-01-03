@@ -1,5 +1,4 @@
 <?php
-// api/src/Entity/MediaObject.php
 
 namespace App\Entity;
 
@@ -59,6 +58,7 @@ class MediaObject
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @ORM\Id
+     * @Groups({"media_object_read"})
      */
     protected $id;
 
@@ -82,6 +82,7 @@ class MediaObject
      * @var string|null
      *
      * @ORM\Column(nullable=true)
+     * @Groups({"read", "media_object_read"})
      */
     public $filePath;
 
@@ -96,5 +97,13 @@ class MediaObject
     public function getContentUrl(): ?string
     {
         return $this->contentUrl;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
     }
 }
