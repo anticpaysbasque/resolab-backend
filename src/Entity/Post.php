@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     attributes={"order"={"createdAt": "DESC"}},
  *     normalizationContext={"groups"={"read"}},
  *     denormalizationContext={"groups"={"write"}}
  * )
@@ -164,5 +165,13 @@ class Post
     public function getLikes(): PersistentCollection
     {
         return $this->likes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }
