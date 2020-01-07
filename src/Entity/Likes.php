@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read_like"}}
+ * )
  * @ORM\Entity()
  * @ApiFilter(SearchFilter::class, properties={
  *     "post.id": "exact",
@@ -23,24 +25,26 @@ class Likes
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"read_like"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read"})
+     * @Groups({"read_like"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="likes")
+     * @Groups({"read_like"})
      */
     private $post;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="likes")
+     * @Groups({"read_like"})
      */
     private $comment;
 
