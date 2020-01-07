@@ -25,7 +25,7 @@ class Post
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"read", "read_like"})
      */
     private $id;
 
@@ -50,7 +50,7 @@ class Post
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read", "write"})
+     * @Groups({"read", "write", "read_like"})
      */
     private $user;
 
