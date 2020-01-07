@@ -25,14 +25,14 @@ class Likes
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read_like"})
+     * @Groups({"read_like", "read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="likes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read_like"})
+     * @Groups({"read_like", "read"})
      */
     private $user;
 
