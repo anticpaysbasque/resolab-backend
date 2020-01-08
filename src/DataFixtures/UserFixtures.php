@@ -5,11 +5,12 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Faker;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     private $encoder;
 
@@ -75,14 +76,16 @@ class UserFixtures extends Fixture
     private function getStudents()
     {
         $users = [];
+        $classRooms = $this->getClassRooms();
         $faker = Faker\Factory::create();
-        for($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $user = new User("student_$i");
             $user
                 ->setFirstname($faker->name)
                 ->setLastname($faker->name)
                 ->setRoles(['ROLE_STUDENT'])
                 ->setGender($faker->randomElement(['male', 'female']))
+                ->setClassRoom($this->getReference($faker->randomElement($classRooms)))
             ;
             $user->setPassword($this->encoder->encodePassword($user, 'antic'));
             $this->addReference("student_$i", $user);
@@ -91,5 +94,22 @@ class UserFixtures extends Fixture
 
 
         return $users;
+    }
+
+    private function getClassRooms()
+    {
+        $classRooms = [];
+        for ($i = 0; $i < 2; $i++) {
+            $classRooms[] = "classroom_$i";
+        }
+
+        return $classRooms;
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            ClassRoomFixtures::class,
+        );
     }
 }

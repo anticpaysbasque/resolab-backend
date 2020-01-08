@@ -81,6 +81,11 @@ class User implements UserInterface
     private $posts;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Story", mappedBy="user")
+     */
+    private $stories;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
      */
     private $comments;
@@ -95,11 +100,24 @@ class User implements UserInterface
      */
     private $likes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ClassRoom", inversedBy="user")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $classRoom;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isRestricted;
+
     public function __construct($username)
     {
         $this->isActive = true;
+        $this->isRestricted = true;
         $this->username = $username;
         $this->posts = new ArrayCollection();
+        $this->stories = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->times = new ArrayCollection();
         $this->likes = new ArrayCollection();
@@ -242,6 +260,18 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getClassRoom(): ?ClassRoom
+    {
+        return $this->classRoom;
+    }
+
+    public function setClassRoom(?ClassRoom $classRoom): self
+    {
+        $this->classRoom = $classRoom;
+
+        return $this;
+    }
+
     /**
      * @return PersistentCollection|Post[]
      */
@@ -267,6 +297,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($post->getUser() === $this) {
                 $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return PersistentCollection|Post[]
+     */
+    public function getStories(): PersistentCollection
+    {
+        return $this->stories;
+    }
+
+    public function addStory(Story $story): self
+    {
+        if (!$this->stories->contains($story)) {
+            $this->stories[] = $story;
+            $story->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStory(Story $story): self
+    {
+        if ($this->stories->contains($story)) {
+            $this->stories->removeElement($story);
+            // set the owning side to null (unless already changed)
+            if ($story->getUser() === $this) {
+                $story->setUser(null);
             }
         }
 
@@ -318,5 +379,23 @@ class User implements UserInterface
     public function getLikes(): PersistentCollection
     {
         return $this->likes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRestricted(): bool
+    {
+        return $this->isRestricted;
+    }
+
+    /**
+     * @param bool $isRestricted
+     */
+    public function setIsRestricted(bool $isRestricted): self
+    {
+        $this->isRestricted = $isRestricted;
+
+        return $this;
     }
 }
