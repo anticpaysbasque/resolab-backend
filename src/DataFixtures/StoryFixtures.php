@@ -2,41 +2,38 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Post;
+use App\Entity\Story;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker;
 
-class PostFixtures extends Fixture implements DependentFixtureInterface
+class StoryFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        foreach ($this->getPosts() as $post) {
-            $manager->persist($post);
+        foreach ($this->geStories() as $story) {
+            $manager->persist($story);
         }
 
         $manager->flush();
     }
 
-    private function getPosts()
+    private function geStories()
     {
-        $posts = [];
+        $stories = [];
         $users = $this->getUsers();
 
         $faker = Faker\Factory::create();
         for ($i = 0; $i < 50; $i++) {
-            $post = new Post();
-            $post
-                ->setDescription($faker->sentence)
-                ->setPhoto($faker->imageUrl())
+            $story = new Story();
+            $story
                 ->setUser($this->getReference($faker->randomElement($users)))
             ;
-            $this->addReference("post_$i", $post);
-            $posts[] = $post;
+            $stories[] = $story;
         }
 
-        return $posts;
+        return $stories;
     }
 
     private function getUsers()

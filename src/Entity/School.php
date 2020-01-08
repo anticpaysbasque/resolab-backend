@@ -23,6 +23,11 @@ class School
      */
     private $name;
 
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
