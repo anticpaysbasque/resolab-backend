@@ -43,6 +43,7 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"read"})
      */
     private $createdAt;
 
@@ -130,4 +131,10 @@ class Comment
 
         return $this;
     }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
 }
