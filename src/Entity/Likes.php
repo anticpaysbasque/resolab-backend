@@ -118,7 +118,11 @@ class Likes
 
     public function setCreatedAt($createdAt)
     {
+<<<<<<< HEAD
         return $this->createdAt = $createdAt;
+=======
+        return $this->createdAt=$createdAt;
+>>>>>>> added createdAt in Likes tables
 
     }
 }
