@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}}
  * )
  * @ORM\Entity()
  */
@@ -20,7 +21,7 @@ class Story
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"read","write"})
      */
     private $id;
 
@@ -36,14 +37,14 @@ class Story
      * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
-     * @Groups({"read"})
+     * @Groups({"read", "write"})
      */
     public $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="stories")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read"})
+     * @Groups({"read", "write"})
      */
     private $user;
 
