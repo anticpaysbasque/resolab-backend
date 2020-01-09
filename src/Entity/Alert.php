@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\AlertRepository")
+ * @ORM\Entity()
  */
 class Alert
 {
@@ -24,18 +24,17 @@ class Alert
     private $status;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="alert", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="alerts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Post")
      */
     private $post;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="alerts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment")
      */
     private $comment;
 

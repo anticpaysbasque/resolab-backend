@@ -127,7 +127,7 @@ token() {
 # Assets
 #############
 
-assets() {
+asset() {
     cmd 'yarn install && yarn run dev'
 }
 
