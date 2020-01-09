@@ -3,16 +3,20 @@
 namespace App\Entity;
 
 use \DateTime;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     attributes={"order"={"date": "DESC"}},
  *     normalizationContext={"groups"={"read"}},
  *     denormalizationContext={"groups"={"write"}}
  * )
+ * @ApiFilter(OrderFilter::class, properties={"date"}, arguments={"orderParameterName"="order"})
  * @ORM\Entity()
  */
 class Story
@@ -26,7 +30,7 @@ class Story
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      * @Groups({"read"})
      */
     private $date;
