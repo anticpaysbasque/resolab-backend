@@ -10,7 +10,7 @@ help:
 ## Docker
 ##---------------------------------------------------------------------------
 
-init: build create-mysql up install database migrate assets permissions ## Init project
+init: build create-mysql up install database migrate asset permissions ## Init project
 
 build: ## Build all containers
 	$(EXEC) build
@@ -101,8 +101,8 @@ phpcs-fixer-apply: ## Apply PHPCSFIXER
 ## Assets
 ##---------------------------------------------------------------------------
 
-assets: ## RUN All assets
-	$(EXEC) assets
+asset: ## RUN All assets
+	$(EXEC) asset
 
 yarn: ## RUN Yarn
 	$(EXEC) yarn
