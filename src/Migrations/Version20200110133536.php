@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200110085908 extends AbstractMigration
+final class Version20200110133536 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -24,8 +24,7 @@ final class Version20200110085908 extends AbstractMigration
 
         $this->addSql('ALTER TABLE media_object CHANGE file_path file_path VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE user CHANGE class_room_id class_room_id INT DEFAULT NULL, CHANGE roles roles JSON NOT NULL, CHANGE birthday birthday DATE DEFAULT NULL');
-        $this->addSql('ALTER TABLE alert DROP INDEX IDX_17FD46C1A76ED395, ADD UNIQUE INDEX UNIQ_17FD46C1A76ED395 (user_id)');
-        $this->addSql('ALTER TABLE alert CHANGE user_id user_id INT NOT NULL, CHANGE post_id post_id INT DEFAULT NULL, CHANGE comment_id comment_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE alert CHANGE user_id user_id INT DEFAULT NULL, CHANGE post_id post_id INT DEFAULT NULL, CHANGE comment_id comment_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE comment CHANGE post_id post_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE story CHANGE image_id image_id INT DEFAULT NULL, CHANGE date date DATETIME NOT NULL');
         $this->addSql('ALTER TABLE post CHANGE image_id image_id INT DEFAULT NULL, CHANGE description description VARCHAR(255) DEFAULT NULL, CHANGE photo photo VARCHAR(255) DEFAULT NULL');
@@ -37,7 +36,6 @@ final class Version20200110085908 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE alert DROP INDEX UNIQ_17FD46C1A76ED395, ADD INDEX IDX_17FD46C1A76ED395 (user_id)');
         $this->addSql('ALTER TABLE alert CHANGE user_id user_id INT DEFAULT NULL, CHANGE post_id post_id INT DEFAULT NULL, CHANGE comment_id comment_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE comment CHANGE post_id post_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE likes CHANGE post_id post_id INT DEFAULT NULL, CHANGE comment_id comment_id INT DEFAULT NULL');
