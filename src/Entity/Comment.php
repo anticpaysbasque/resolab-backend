@@ -31,7 +31,7 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"read"})
+     * @Groups({"read", "read_like"})
      */
     private $content;
 

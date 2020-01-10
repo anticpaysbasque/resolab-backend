@@ -38,7 +38,7 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"read", "write"})
+     * @Groups({"read", "write", "read_like"})
      */
     private $description;
 

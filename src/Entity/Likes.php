@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use \DateTime;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
@@ -47,6 +48,17 @@ class Likes
      * @Groups({"read_like"})
      */
     private $comment;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"read_like"})
+     */
+    private $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -97,5 +109,16 @@ class Likes
         }
 
         return $this;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        return $this->createdAt = $createdAt;
+
     }
 }
