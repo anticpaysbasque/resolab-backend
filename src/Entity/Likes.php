@@ -119,6 +119,5 @@ class Likes
     public function setCreatedAt($createdAt)
     {
         return $this->createdAt = $createdAt;
-
     }
 }
