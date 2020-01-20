@@ -65,6 +65,12 @@ class Alert
      */
     private $story;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Groups({"read"})
+     */
+    private $description;
+
     public function __construct()
     {
         $this->resolved = false;
@@ -175,5 +181,23 @@ class Alert
         $this->story = $story;
         $this->comment = null;
         $this->post = null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }
