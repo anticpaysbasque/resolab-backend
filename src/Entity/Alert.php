@@ -41,6 +41,13 @@ class Alert
     private $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"read"})
+     */
+    private $moderator;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Post")
      * @Groups({"read"})
      */
@@ -105,6 +112,21 @@ class Alert
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getModerator(): ?User
+    {
+        return $this->moderator;
+    }
+
+    public function setModerator(User $moderator): self
+    {
+        if (in_array('ROLE_MODERATOR', $moderator->getRoles())) {
+            $this->moderator = $moderator;
+            $this->takenCare = true;
+        }
 
         return $this;
     }
