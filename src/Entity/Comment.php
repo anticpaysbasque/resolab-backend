@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use \DateTime;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
@@ -17,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiFilter(SearchFilter::class, properties={
  *     "post.id": "exact"
  * })
+ * @ApiFilter(BooleanFilter::class, properties={"display"})
  * @ORM\Entity()
  */
 class Comment
@@ -59,10 +62,17 @@ class Comment
      */
     private $likes;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"read", "write"})
+     */
+    private $display;
+
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
         $this->likes = new ArrayCollection();
+        $this->display = true;
     }
 
     public function getId(): ?int
@@ -91,10 +101,10 @@ class Comment
     }
 
     /**
-     * @param $post
-     * @return Comment
+     * @param Post $post
+     * @return $this
      */
-    public function setPost($post): self
+    public function setPost(?Post $post): self
     {
         $this->post = $post;
 
@@ -122,7 +132,7 @@ class Comment
     }
 
     /**
-     * @param $createdAt
+     * @param \DateTime $createdAt
      * @return Comment
      */
     public function setCreatedAt($createdAt): self
@@ -137,4 +147,21 @@ class Comment
         return $this->createdAt;
     }
 
+    /**
+     * @return bool
+     */
+    public function isDisplay(): bool
+    {
+        return $this->display;
+    }
+
+    /**
+     * @param bool $display
+     */
+    public function setDisplay(bool $display): self
+    {
+        $this->display = $display;
+
+        return $this;
+    }
 }
