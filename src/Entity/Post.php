@@ -201,4 +201,22 @@ class Post
     {
         return $this->image;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDisplay(): bool
+    {
+        return $this->display;
+    }
+
+    /**
+     * @param bool $display
+     */
+    public function setDisplay(bool $display): self
+    {
+        $this->display = $display;
+
+        return $this;
+    }
 }
