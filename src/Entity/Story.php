@@ -49,9 +49,16 @@ class Story
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"read", "write"})
+     */
+    private $display;
+
     public function __construct()
     {
         $this->date = new DateTime();
+        $this->display = true;
     }
 
     public function getId(): ?int
@@ -80,6 +87,24 @@ class Story
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplay(): bool
+    {
+        return $this->display;
+    }
+
+    /**
+     * @param bool $display
+     */
+    public function setDisplay(bool $display): self
+    {
+        $this->display = $display;
 
         return $this;
     }
