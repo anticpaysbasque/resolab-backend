@@ -145,6 +145,9 @@ class Alert
     public function setPost(?Post $post): self
     {
         $this->post = $post;
+        if ($this->post) {
+            $this->post->setDisplay(false);
+        }
         $this->comment = null;
         $this->story = null;
 
@@ -159,6 +162,9 @@ class Alert
     public function setComment(?Comment $comment): self
     {
         $this->comment = $comment;
+        if ($this->comment) {
+            $this->comment->setDisplay(false);
+        }
         $this->story = null;
         $this->post = null;
 
@@ -174,11 +180,14 @@ class Alert
     }
 
     /**
-     * @param mixed $story
+     * @param Story|null $story
      */
-    public function setStory($story): void
+    public function setStory(?Story $story): void
     {
         $this->story = $story;
+        if ($this->story) {
+            $this->story->setDisplay(false);
+        }
         $this->comment = null;
         $this->post = null;
     }
