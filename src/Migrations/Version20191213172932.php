@@ -20,7 +20,7 @@ final class Version20191213172932 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        //$this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE user CHANGE roles roles JSON NOT NULL, CHANGE birthday birthday DATE DEFAULT NULL, CHANGE time time NUMERIC(2, 2) DEFAULT NULL');
         $this->addSql('ALTER TABLE comment ADD post_id INT DEFAULT NULL, ADD user_id INT NOT NULL');
@@ -36,7 +36,7 @@ final class Version20191213172932 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        //$this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526C4B89032C');
         $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526CA76ED395');
