@@ -2,26 +2,39 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ApiFilter(SearchFilter::class, properties={
+ *     "username": "ipartial"
+ * })
  */
 class User implements UserInterface
 {
+    const GENDERS = ['male', 'female'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"read", "read_like"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"read", "read_like"})
      */
     private $username;
 
@@ -42,40 +55,72 @@ class User implements UserInterface
     private $isActive;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=6, nullable=true)
+     * @Assert\Choice(choices=USER::GENDERS, message="Choose a valid gender.")
      */
     private $gender;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true, nullable=true)
      */
     private $birthday;
 
     /**
-     * @ORM\Column(type="decimal", precision=2, scale=2)
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="user")
      */
-    private $time;
+    private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Story", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Story", mappedBy="user")
      */
     private $stories;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Time", mappedBy="user")
+     */
+    private $times;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Likes", mappedBy="user", orphanRemoval=true)
+     */
+    private $likes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ClassRoom", inversedBy="user")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $classRoom;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isRestricted;
 
     public function __construct($username)
     {
         $this->isActive = true;
+        $this->isRestricted = true;
         $this->username = $username;
+        $this->posts = new ArrayCollection();
         $this->stories = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->times = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,22 +260,53 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTime(): ?string
+    public function getClassRoom(): ?ClassRoom
     {
-        return $this->time;
+        return $this->classRoom;
     }
 
-    public function setTime(string $time): self
+    public function setClassRoom(?ClassRoom $classRoom): self
     {
-        $this->time = $time;
+        $this->classRoom = $classRoom;
 
         return $this;
     }
 
     /**
-     * @return Collection|Story[]
+     * @return PersistentCollection|Post[]
      */
-    public function getStories(): Collection
+    public function getPosts(): PersistentCollection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->contains($post)) {
+            $this->posts->removeElement($post);
+            // set the owning side to null (unless already changed)
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return PersistentCollection|Post[]
+     */
+    public function getStories(): PersistentCollection
     {
         return $this->stories;
     }
@@ -254,6 +330,71 @@ class User implements UserInterface
                 $story->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return PersistentCollection|Post[]
+     */
+    public function getComments(): PersistentCollection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Time[]
+     */
+    public function getTimes(): Collection
+    {
+        return $this->times;
+    }
+
+    /**
+     * @return PersistentCollection
+     */
+    public function getLikes(): PersistentCollection
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRestricted(): bool
+    {
+        return $this->isRestricted;
+    }
+
+    /**
+     * @param bool $isRestricted
+     */
+    public function setIsRestricted(bool $isRestricted): self
+    {
+        $this->isRestricted = $isRestricted;
 
         return $this;
     }

@@ -1,9 +1,11 @@
 
 ###> symfony/framework-bundle ###
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
 /public/bundles/
+/public/media/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -33,6 +35,7 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+### Docker ###
+docker/mysql
+docker/nginx/log
+### Docker ###
