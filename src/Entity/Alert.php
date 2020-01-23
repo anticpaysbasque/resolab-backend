@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use \DateTime;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -71,10 +72,23 @@ class Alert
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"read"})
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="array")
+     * @Groups({"read"})
+     */
+    private $users = [];
+
     public function __construct()
     {
         $this->resolved = false;
         $this->takenCare = false;
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int
@@ -193,6 +207,25 @@ class Alert
     }
 
     /**
+     * @return array
+     */
+    public function getUsers(): array
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param array $users
+     * @return Alert
+     */
+    public function setUsers(array $users = []): self
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getDescription()
@@ -208,5 +241,13 @@ class Alert
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }
