@@ -20,7 +20,7 @@ final class Version20200113105816 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        //$this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE alert ADD story_id INT DEFAULT NULL, ADD taken_care TINYINT(1) NOT NULL, CHANGE status resolved TINYINT(1) NOT NULL');
         $this->addSql('ALTER TABLE alert ADD CONSTRAINT FK_17FD46C1AA5D4036 FOREIGN KEY (story_id) REFERENCES story (id)');
@@ -30,7 +30,7 @@ final class Version20200113105816 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        //$this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE alert DROP FOREIGN KEY FK_17FD46C1AA5D4036');
         $this->addSql('DROP INDEX IDX_17FD46C1AA5D4036 ON alert');

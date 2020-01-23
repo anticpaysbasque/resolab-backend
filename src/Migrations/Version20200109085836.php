@@ -20,7 +20,7 @@ final class Version20200109085836 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        //$this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE alert DROP INDEX UNIQ_17FD46C1A76ED395, ADD INDEX IDX_17FD46C1A76ED395 (user_id)');
         $this->addSql('ALTER TABLE alert CHANGE user_id user_id INT DEFAULT NULL, CHANGE post_id post_id INT DEFAULT NULL, CHANGE comment_id comment_id INT DEFAULT NULL');
@@ -35,7 +35,7 @@ final class Version20200109085836 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        //$this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE alert DROP INDEX IDX_17FD46C1A76ED395, ADD UNIQUE INDEX UNIQ_17FD46C1A76ED395 (user_id)');
         $this->addSql('ALTER TABLE alert CHANGE user_id user_id INT NOT NULL, CHANGE post_id post_id INT DEFAULT NULL, CHANGE comment_id comment_id INT DEFAULT NULL');
